@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="orders">
+    <h2>История заказов</h2>
+
+    {% if orders %}
+    <form method="get" style="margin-bottom: 20px;">
+        <label for="filter">Фильтр по названию:</label>
+        <input type="text" name="filter" value="{{ request.args.get('filter', '') }}">
+        <button type="submit">Применить</button>
+    </form>
+
+    <table class="cart-table">
+        <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Товар</th>
+                <th>Количество</th>
+                <th>Цена</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order['date'] }}</td>
+                <td>{{ order['product_name'] }}</td>
+                <td>{{ order['quantity'] }}</td>
+                <td>{{ order['price'] }} ₽</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>Вы пока не сделали ни одного заказа.</p>
+    {% endif %}
+</section>
+{% endblock %}

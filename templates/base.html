@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Русский свет</title>
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">
+                <img alt="Русский свет" src="{{ url_for('static', filename='images/logo.png') }}" />
+                <span class="logo-text">Русский свет</span>
+            </div>
+            <nav class="top-nav">
+                <a href="{{ url_for('delivery') }}">Доставка</a>
+                <a href="{{ url_for('howto') }}">Как купить</a>
+                <a href="{{ url_for('contacts') }}">Контакты</a>
+                <a href="{{ url_for('compare') }}">Сравнение</a>
+                {% if session.username %}
+                <a href="{{ url_for('profile') }}">Кабинет</a>
+                {% else %}
+                <a href="{{ url_for('login') }}">Вход</a>
+                <a href="{{ url_for('register') }}">Регистрация</a>
+                {% endif %}
+            </nav>
+        </div>
+        <div class="header-middle">
+            <div class="contact-block">
+                <span><i class="fa fa-phone"></i> 8 (800) 123-45-67</span>
+                <a href="#">Заказать звонок</a>
+            </div>
+            <div class="location-block">
+                <i class="fa fa-map-marker-alt"></i> Тверь
+            </div>
+            <div class="cart-block">
+                <a href="{{ url_for('cart') }}">
+                    <i class="fa fa-shopping-cart"></i> {{ session.cart|length if session.cart else 0 }} товаров
+                </a>
+            </div>
+        </div>
+        <div class="search-bar">
+            <a class="catalog-button" href="{{ url_for('catalog') }}">
+                <i class="fa fa-bars"></i> Каталог
+            </a>
+            <form action="{{ url_for('catalog') }}" class="search-form" method="get"><input name="filter"
+                    placeholder="Поиск по каталогу" required="required" type="text" /><button type="submit"><i
+                        class="fa fa-search"></i></button></form>
+        </div>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('searchInput');
+            input.addEventListener('input', function () {
+                fetch('/suggest?q=' + input.value)
+                    .then(res => res.json())
+                    .then(data => {
+                        input.setAttribute('list', 'suggestions');
+                        let datalist = document.getElementById('suggestions');
+                        if (!datalist) {
+                            datalist = document.createElement('datalist');
+                            datalist.id = 'suggestions';
+                            document.body.appendChild(datalist);
+                        }
+                        datalist.innerHTML = data.map(item => `<option value="${item}">`).join('');
+                    });
+            });
+        });
+    </script>
+</body>
+
+</html>

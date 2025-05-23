@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="display: flex;">
+    <aside class="sidebar">
+        <h3>Категории</h3>
+        {% for cat in categories %}
+            <a href="{{ url_for('catalog', category=cat['category']) }}" class="category-link {% if cat['category'] == selected_category %}active{% endif %}">
+                {{ cat['category'] }}
+            </a>
+        {% endfor %}
+    </aside>
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ url_for('static', filename='images/' + product['image']) }}" alt="{{ product['name'] }}" class="product-image">
+            <h3><a href="{{ url_for('product', product_id=product['id']) }}">{{ product['name'] }}</a></h3>
+            <p>{{ product['price'] }} ₽</p>
+            <form method="post" action="{{ url_for('add_to_cart', product_id=product['id']) }}">
+                <button type="submit">Добавить в корзину</button>
+            </form>
+            <form method="post" action="{{ url_for('compare_add', product_id=product['id']) }}">
+                <button type="submit">Сравнить</button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

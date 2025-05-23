@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="product-detail">
+    <h2>{{ product['name'] }}</h2>
+    <div style="display: flex; gap: 30px;">
+        <img src="{{ url_for('static', filename='images/' + product['image']) }}" alt="{{ product['name'] }}" style="max-width: 300px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+        <div>
+            <p><strong>Описание:</strong> {{ product['description'] }}</p>
+            <p><strong>Категория:</strong> {{ product['category'] }}</p>
+            <p><strong>Цена:</strong> <span style="color: #2e7d32; font-weight: bold;">{{ product['price'] }} ₽</span></p>
+            <form method="post" action="{{ url_for('add_to_cart', product_id=product['id']) }}">
+                <button type="submit">Добавить в корзину</button>
+            </form>
+<form method="post" action="{{ url_for('compare_add', product_id=product['id']) }}">
+<button type="submit">Сравнить</button>
+</form>
+        </div>
+    </div>
+</section>
+{% endblock %}

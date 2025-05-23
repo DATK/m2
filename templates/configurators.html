@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="info-page">
+    <h2>Конфигуратор Arduino-проекта</h2>
+    <form method="post" action="{{ url_for('configurators') }}">
+        <label for="board">Выберите плату:</label>
+        <select name="board" required>
+            <option value="Arduino Uno">Arduino Uno</option>
+            <option value="Arduino Nano">Arduino Nano</option>
+            <option value="ESP32">ESP32</option>
+        </select><br><br>
+
+        <label for="display">Дисплей:</label>
+        <select name="display">
+            <option value="None">Без дисплея</option>
+            <option value="LCD 1602">LCD 1602</option>
+            <option value="OLED 0.96">OLED 0.96"</option>
+        </select><br><br>
+
+        <label for="sensor">Датчик:</label>
+        <select name="sensor">
+            <option value="None">Без датчика</option>
+            <option value="DS18B20">Температуры (DS18B20)</option>
+            <option value="LDR">Освещённости (LDR)</option>
+        </select><br><br>
+
+        <button type="submit">Подобрать комплект</button>
+    </form>
+
+    {% if result %}
+    <h3>Рекомендуемые компоненты:</h3>
+    <ul>
+        {% for item in result %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+{% endblock %}
