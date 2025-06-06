@@ -58,11 +58,12 @@
     <div class="checkout-container">
         <h2>Оформление заказа</h2>
 
+        <form action="" method="post" id="f"></form>
          <div class="form-group">
             <label for="scpd">Способ доставки</label>
             <select id="scpd" name="scpd">
-                <option value="home">На дом</option>
-                <option value="pochta">На почту</option>
+                <option value="home">Курьером</option>
+                <option value="pochta">Почтой</option>
             </select>
         </div>
 
@@ -73,7 +74,7 @@
 
         <div class="form-group">
             <label for="payment">Способ оплаты</label>
-            <select id="payment" name="payment">
+            <select id="payment" name="payment" form="f">
                 <option value="card">Банковская карта</option>
                 <option value="cash">Наличными при получении</option>
                 <option value="sbp">Система быстрых платежей (СБП)</option>
@@ -95,7 +96,7 @@
             <input type="text" id="comment" name="comment" placeholder="Например: подъезд, домофон...">
         </div>
 
-        <button class="btn-checkout">Перейти к оплате</button>
+        <button form="f" class="btn-checkout">Перейти к оплате</button>
     </div>
 </body>
 </html>

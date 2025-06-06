@@ -170,6 +170,7 @@ input[type=text], input[type=password], input[type=email] {
     border: 1px solid #ccc;
     width: 100%;
     margin-bottom: 10px;
+
 }
 
 .site-header {
@@ -185,6 +186,7 @@ input[type=text], input[type=password], input[type=email] {
     justify-content: space-between;
     align-items: center;
     padding: 12px 20px;
+    color: white;
     flex-wrap: wrap;
 }
 

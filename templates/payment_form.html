@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Оплата заказа</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #eef5ff;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #0051a8;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d0d8e0;
+            border-radius: 8px;
+        }
+
+        .btn {
+            background: #0051a8;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 15px;
+            margin-left: 40%;
+        }
+
+        .btn:hover {
+            background: #003f84;
+        }
+
+        .qr-box {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .success-message {
+            background: #d1ffd7;
+            padding: 10px;
+            border: 1px solid #a0e3af;
+            border-radius: 6px;
+            margin-top: 20px;
+            color: #10702b;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 40px;
+        }
+
+        .form-half {
+            flex: 1;
+        }
+    </style>
+    <script>
+        function submitPayment() {
+            const type = {{ method }};
+        if (type === 1) {
+            const card = document.getElementById('card').value;
+            const exp = document.getElementById('exp').value;
+            const cvc = document.getElementById('cvc').value;
+            if (card && exp && cvc) {
+                document.getElementById('result').innerHTML = '<div class=\"success-message\">Оплата прошла успешно!</div>';
+            } else {
+                alert('Пожалуйста, заполните все поля.');
+            }
+        } else if (type === 2) {
+            document.getElementById('result').innerHTML =
+                '<div class=\"qr-box\"><img style="width: 150px; height: 150px;" src=\"https://www.azsk74.ru/info/payment/img/1.png" alt=\"QR Code\"><p>Отсканируйте QR-код для оплаты через СБП</p></div>';
+        } else if (type === 3) {
+            document.getElementById('result').innerHTML = '<div class=\"success-message\">Ожидайте оплату при получении</div>';
+        }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Оплата заказа</h2>
+
+        {% if method == 1 %}
+        <!-- Оплата картой -->
+        <div class="form-group">
+            <label>Номер карты</label>
+            <input type="text" id="card" placeholder="0000 0000 0000 0000">
+        </div>
+        <div class="form-row">
+            <div class="form-half">
+                <label>Срок действия</label>
+                <input type="text" id="exp" placeholder="MM/YY">
+            </div>
+            <div class="form-half">
+                <label>CVC</label>
+                <input type="text" id="cvc" placeholder="123">
+            </div>
+        </div>
+        {% elif method == 2 %}
+        <p>Нажмите кнопку, чтобы сгенерировать QR-код для оплаты через СБП.</p>
+        {% elif method == 3 %}
+        <p>Курьер получит оплату наличными. Подтвердите способ оплаты.</p>
+        {% endif %}
+
+        <button class="btn" onclick="submitPayment()">Оплатить</button>
+
+        <div id="result"></div>
+    </div>
+</body>
+
+</html>

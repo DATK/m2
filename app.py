@@ -3,10 +3,10 @@ import sqlite3
 import os
 
 
-app = Flask(__name__)
-app.secret_key = 'secretkey'
+application = Flask(__name__)
+application.secret_key = 'secretkey'
 
-DATABASE = os.path.join(app.root_path, 'database', 'ecomponents.db')
+DATABASE = os.path.join(application.root_path, 'database', 'ecomponents.db')
 
 def init_db():
     conn = get_db_connection()
@@ -25,24 +25,24 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-@app.route('/')
+@application.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/product/<int:product_id>')
+@application.route('/product/<int:product_id>')
 def product(product_id):
     conn = get_db_connection()
     product = conn.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
     conn.close()
     return render_template('product.html', product=product)
 
-@app.route('/cart')
+@application.route('/cart')
 def cart():
     cart_items = session.get('cart', [])
     total_price = sum(item['price'] * item['quantity'] for item in cart_items)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
-@app.route('/cart/add/<int:product_id>', methods=['POST'])
+@application.route('/cart/add/<int:product_id>', methods=['POST'])
 def add_to_cart(product_id):
     conn = get_db_connection()
     product = conn.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
@@ -58,22 +58,22 @@ def add_to_cart(product_id):
         session['cart'] = cart
     return redirect(url_for('cart'))
 
-@app.route('/cart/remove/<int:product_id>', methods=['POST'])
+@application.route('/cart/remove/<int:product_id>', methods=['POST'])
 def remove_from_cart(product_id):
     cart = session.get('cart', [])
     cart = [item for item in cart if item['id'] != product_id]
     session['cart'] = cart
     return redirect(url_for('cart'))
 
-@app.route('/about')
+@application.route('/about')
 def about():
     return render_template('about.html')
 
-@app.route('/contacts')
+@application.route('/contacts')
 def contacts():
     return render_template('contacts.html')
 
-@app.route('/register', methods=['GET', 'POST'])
+@application.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
         username = request.form['username']
@@ -90,7 +90,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@application.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -107,19 +107,19 @@ def login():
     return render_template('login.html')
 
 
-@app.route('/profile')
+@application.route('/profile')
 def profile():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     return render_template('profile.html')
 
-@app.route('/logout', methods=['POST'])
+@application.route('/logout', methods=['POST'])
 def logout():
     session.clear()
     return redirect(url_for('index'))
 
 
-@app.route('/orders')
+@application.route('/orders')
 def orders():
     if 'user_id' not in session:
         return redirect(url_for('login'))
@@ -139,7 +139,7 @@ def orders():
     return render_template('orders.html', orders=orders)
 
 
-@app.route('/suggest')
+@application.route('/suggest')
 def suggest():
     q = request.args.get('q', '')
     conn = get_db_connection()
@@ -148,18 +148,18 @@ def suggest():
     return jsonify([row['name'] for row in results])
 
 
-@app.route('/delivery')
+@application.route('/delivery')
 def delivery():
     return render_template('delivery.html')
 
 
-@app.route('/howto')
+@application.route('/howto')
 def howto():
     return render_template('howto.html')
 
 
 
-@app.route('/compare/add/<int:product_id>', methods=['POST'])
+@application.route('/compare/add/<int:product_id>', methods=['POST'])
 def compare_add(product_id):
     conn = get_db_connection()
     product = conn.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
@@ -171,23 +171,36 @@ def compare_add(product_id):
         session['compare'] = compare_list
     return redirect(url_for('compare'))
 
-@app.route('/compare')
+@application.route('/compare')
 def compare():
     items = session.get('compare', [])
     return render_template('compare.html', items=items)
 
-@app.route('/compare/remove/<int:product_id>', methods=['POST'])
+@application.route('/compare/remove/<int:product_id>', methods=['POST'])
 def remove_compare(product_id):
     compare_list = session.get('compare', [])
     compare_list = [item for item in compare_list if item['id'] != product_id]
     session['compare'] = compare_list
     return redirect(url_for('compare'))
 
-@app.route('/checkout', methods=['GET', 'POST'])
+@application.route('/checkout', methods=['GET', 'POST'])
 def checkout():
+    arg=0
+    if request.method=="POST":
+        if request.form["payment"]=="cash":
+            arg=3
+        elif request.form["payment"]=="card":
+            arg=1
+        else:
+            arg=2
+        return redirect(f"/pay/{arg}")
     return render_template('chekout.html')
 
-@app.route('/catalog')
+@application.route('/pay/<int:arg>')
+def payment_form(arg):
+    return render_template('payment_form.html', method=arg)
+
+@application.route('/catalog')
 def catalog():
     category = request.args.get('category')
     filter_text = request.args.get('filter')
@@ -210,5 +223,5 @@ def catalog():
 init_db()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    application.run(debug=False,host="0.0.0.0")
 
