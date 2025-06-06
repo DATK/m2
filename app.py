@@ -1,6 +1,7 @@
-from flask import jsonify, Flask, render_template, request, redirect, url_for, session
+from flask import jsonify, Flask, render_template, request, redirect, url_for, session,flash
 import sqlite3
 import os
+
 
 app = Flask(__name__)
 app.secret_key = 'secretkey'
@@ -27,8 +28,6 @@ def get_db_connection():
 @app.route('/')
 def index():
     return render_template('index.html')
-
-
 
 @app.route('/product/<int:product_id>')
 def product(product_id):
@@ -80,6 +79,11 @@ def register():
         username = request.form['username']
         password = request.form['password']
         conn = get_db_connection()
+
+        users=conn.execute("SELECT * FROM users WHERE username == ?",(username,)).fetchall()
+        if users!=[]:
+            flash("Данный логин уже занят")
+            return redirect(url_for("register"))
         conn.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
         conn.commit()
         conn.close()
@@ -178,6 +182,10 @@ def remove_compare(product_id):
     compare_list = [item for item in compare_list if item['id'] != product_id]
     session['compare'] = compare_list
     return redirect(url_for('compare'))
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    return render_template('chekout.html')
 
 @app.route('/catalog')
 def catalog():

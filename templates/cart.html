@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for item in cart_items %}
+        {% for item in cart_items %}
         <tr>
             <td>{{ item['name'] }}</td>
             <td>{{ item['price'] }} ₽</td>
@@ -26,13 +26,15 @@
                 </form>
             </td>
         </tr>
-    {% endfor %}
+        {% endfor %}
     </tbody>
 </table>
 
 <div class="cart-summary">
     <p><strong>Итого к оплате: {{ total_price }} ₽</strong></p>
-    <a href="#" class="button">Оформить заказ</a>
+    <form action="{{ url_for('checkout') }}" method="get">
+        <button type="submit" class="btn btn-success">Оформить заказ</button>
+    </form>
 </div>
 
 {% else %}

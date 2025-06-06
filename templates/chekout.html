@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Оформление заказа — Русский свет</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f0f6ff;
+            margin: 0;
+            padding: 0;
+        }
+        .checkout-container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h2 {
+            color: #0051a8;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cdd7e1;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .btn-checkout {
+            background-color: #0051a8;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .btn-checkout:hover {
+            background-color: #003f84;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <h2>Оформление заказа</h2>
+
+         <div class="form-group">
+            <label for="scpd">Способ доставки</label>
+            <select id="scpd" name="scpd">
+                <option value="home">На дом</option>
+                <option value="pochta">На почту</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Адрес доставки</label>
+            <input type="text" id="address" name="address" placeholder="Город, улица, дом, квартира">
+        </div>
+
+        <div class="form-group">
+            <label for="payment">Способ оплаты</label>
+            <select id="payment" name="payment">
+                <option value="card">Банковская карта</option>
+                <option value="cash">Наличными при получении</option>
+                <option value="sbp">Система быстрых платежей (СБП)</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="fio">ФИО</label>
+            <input type="text" id="fio" name="fio" placeholder="Антонов Дмитрий Иванович">
+        </div>
+
+        <div class="form-group">
+            <label for="num">Номер телефона</label>
+            <input type="text" id="num" name="num" placeholder="89991234567">
+        </div>
+
+        <div class="form-group">
+            <label for="comment">Комментарий к заказу</label>
+            <input type="text" id="comment" name="comment" placeholder="Например: подъезд, домофон...">
+        </div>
+
+        <button class="btn-checkout">Перейти к оплате</button>
+    </div>
+</body>
+</html>
